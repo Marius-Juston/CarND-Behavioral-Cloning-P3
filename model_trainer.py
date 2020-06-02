@@ -4,8 +4,10 @@ from datetime import datetime
 
 import cv2
 import numpy as np
+from tensorflow.python.keras import Input
 from tensorflow.python.keras.callbacks import EarlyStopping
-from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, MaxPooling2D
+from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, MaxPooling2D, BatchNormalization, \
+    concatenate
 from tensorflow.python.keras.models import Model, Sequential
 
 
@@ -29,6 +31,18 @@ def save_model(model: Model, file_path):
     model.save(file_path, save_format='h5')
 
 
+def get_image(line, index, array, separator=os.sep, image_directory='data/IMG/'):
+
+    source_path = line[index]
+    file_name = source_path.split(separator)[-1]
+    path = image_directory + file_name
+    image = cv2.imread(path)
+    if image is None:
+        print(index, line)
+    array.append(image)
+    array.append(cv2.flip(image, 1))
+
+
 def load_images(driving_log_file):
     lines = []
 
@@ -39,28 +53,21 @@ def load_images(driving_log_file):
         for line in reader:
             lines.append(line)
 
-    images = []
+    center = []
+    left = []
+    right = []
     measurements = []
 
-    separator = os.sep
-    image_directory = 'data/IMG/'
-
     for line in lines:
-        source_path = line[0]
-        file_name = source_path.split(separator)[-1]
-        path = image_directory + file_name
-
-        image = cv2.imread(path)
-        images.append(image)
+        get_image(line, 0, center)
+        get_image(line, 1, left)
+        get_image(line, 2, right)
 
         measurement = float(line[3])
         measurements.append(measurement)
-
-        # for image, measurement in zip(images, measurements):
-        images.append(cv2.flip(image, 1))
         measurements.append(-measurement)
 
-    return np.array(images), np.array(measurements)
+    return np.array(center), np.array(left), np.array(right), np.array(measurements)
 
 
 if __name__ == '__main__':
@@ -69,11 +76,11 @@ if __name__ == '__main__':
 
     if os.path.exists(save_images):
         print("Loading")
-        data = np.load(save_images)
-        images, measurements = data['images'], data['measurements']
+        data = np.load(save_images, allow_pickle=True)
+        images, measurements, left, right = data['images'], data['measurements'], data['left'], data['right']
     else:
-        images, measurements = load_images(image_file)
-        np.savez(save_images, images=images, measurements=measurements)
+        images, left, right, measurements = load_images(image_file)
+        np.savez(save_images, images=images, measurements=measurements, left=left, right=right)
 
     early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, restore_best_weights=True, patience=5)
 
