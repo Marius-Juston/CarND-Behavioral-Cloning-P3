@@ -1,5 +1,6 @@
 import csv
 import os
+from datetime import datetime
 
 import cv2
 import numpy as np
@@ -61,7 +62,6 @@ def load_images(driving_log_file):
 
     return np.array(images), np.array(measurements)
 
-import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     image_file = 'data/driving_log.csv'
@@ -75,12 +75,12 @@ if __name__ == '__main__':
         images, measurements = load_images(image_file)
         np.savez(save_images, images=images, measurements=measurements)
 
-    plt.imshow(images[0])
-    plt.show()
     early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, restore_best_weights=True, patience=5)
 
     model = create_model()
+    model.summary()
+
     model.compile(loss='mse', optimizer='adam')
     model.fit(images, measurements, shuffle=True, validation_split=.2, epochs=12, callbacks=[early_stop])
 
-    model.save('model.h5')
+    model.save(f'model{datetime.now().strftime("%Y%m%d-%H%M%S")}.h5')
