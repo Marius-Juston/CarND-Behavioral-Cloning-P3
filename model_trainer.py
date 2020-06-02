@@ -4,12 +4,21 @@ import os
 import cv2
 import numpy as np
 from tensorflow.python.keras.layers import Flatten, Dense
+from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, MaxPooling2D
 from tensorflow.python.keras.models import Model, Sequential
 
 
 def create_model():
     model = Sequential()
-    model.add(Flatten(input_shape=(160, 320, 3)))
+    model.add(Lambda(lambda x: (x / 255.0) - .5, input_shape=(160, 320, 3)))
+
+    model.add(Convolution2D(6, 5, 5, activation='relu'))
+    model.add(MaxPooling2D())
+    model.add(Convolution2D(6, 5, 5, activation='relu'))
+    model.add(MaxPooling2D())
+    model.add(Flatten())
+    model.add(Dense(120))
+    model.add(Dense(84))
     model.add(Dense(1))
 
     return model
