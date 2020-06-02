@@ -4,24 +4,24 @@ from datetime import datetime
 
 import cv2
 import numpy as np
-from tensorflow.python.keras import Input
-from tensorflow.python.keras.callbacks import EarlyStopping
-from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, MaxPooling2D, BatchNormalization, \
-    concatenate
+from tensorflow.python.keras.callbacks import EarlyStopping, TensorBoard
+from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, Cropping2D
 from tensorflow.python.keras.models import Model, Sequential
 
 
 def create_model():
     model = Sequential()
     model.add(Lambda(lambda x: (x / 255.0) - .5, input_shape=(160, 320, 3)))
-
-    model.add(Convolution2D(6, 5, 5, activation='relu'))
-    model.add(MaxPooling2D())
-    model.add(Convolution2D(6, 5, 5, activation='relu'))
-    model.add(MaxPooling2D())
+    model.add(Cropping2D(cropping=((70, 25), (0, 0))))
+    model.add(Convolution2D(24, 5, 2, activation='relu'))
+    model.add(Convolution2D(36, 5, 2, activation='relu'))
+    model.add(Convolution2D(48, 5, 2, activation='relu'))
+    model.add(Convolution2D(64, 3, activation='relu'))
+    model.add(Convolution2D(64, 3, activation='relu'))
     model.add(Flatten())
-    model.add(Dense(120))
-    model.add(Dense(84))
+    model.add(Dense(100))
+    model.add(Dense(50))
+    model.add(Dense(10))
     model.add(Dense(1))
 
     return model
