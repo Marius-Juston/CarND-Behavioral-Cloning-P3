@@ -4,7 +4,7 @@ from datetime import datetime
 
 import cv2
 import numpy as np
-from tensorflow.python.keras.layers import Flatten, Dense
+from tensorflow.python.keras.callbacks import EarlyStopping
 from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, MaxPooling2D
 from tensorflow.python.keras.models import Model, Sequential
 
