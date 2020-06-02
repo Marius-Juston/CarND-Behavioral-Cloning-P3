@@ -65,7 +65,15 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     image_file = 'data/driving_log.csv'
-    images, measurements = load_images(image_file)
+    save_images = 'images.npz'
+
+    if os.path.exists(save_images):
+        print("Loading")
+        data = np.load(save_images)
+        images, measurements = data['images'], data['measurements']
+    else:
+        images, measurements = load_images(image_file)
+        np.savez(save_images, images=images, measurements=measurements)
 
     plt.imshow(images[0])
     plt.show()
