@@ -32,7 +32,6 @@ def save_model(model: Model, file_path):
 
 
 def get_image(line, index, array, separator=os.sep, image_directory='data/IMG/'):
-
     source_path = line[index]
     file_name = source_path.split(separator)[-1]
     path = image_directory + file_name
@@ -88,6 +87,16 @@ if __name__ == '__main__':
     model.summary()
 
     model.compile(loss='mse', optimizer='adam')
-    model.fit(images, measurements, shuffle=True, validation_split=.2, epochs=12, callbacks=[early_stop])
 
-    model.save(f'model{datetime.now().strftime("%Y%m%d-%H%M%S")}.h5')
+    date_time = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    logdir = "logs/fit/" + date_time
+    tensorboard_callback = TensorBoard(log_dir=logdir)
+
+    inputs = np.concatenate((left, images, right))
+    outputs = np.concatenate((measurements, measurements, measurements))
+
+    model.fit(inputs, outputs, shuffle=True, validation_split=.2, epochs=3,
+              callbacks=[early_stop, tensorboard_callback])
+
+    model.save(f'model{date_time}.h5')
