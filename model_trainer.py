@@ -24,9 +24,14 @@ def create_model():
     model.add(Convolution2D(64, 3, activation='relu'))
     model.add(BatchNormalization())
     model.add(Flatten())
-    model.add(Dense(100))
-    model.add(Dense(50))
-    model.add(Dense(10))
+    model.add(Dense(1164, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(100, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(50, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(10, activation='relu'))
+    model.add(BatchNormalization())
     model.add(Dense(1))
 
     return model
