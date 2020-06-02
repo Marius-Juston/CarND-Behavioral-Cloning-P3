@@ -69,9 +69,10 @@ if __name__ == '__main__':
 
     plt.imshow(images[0])
     plt.show()
+    early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, restore_best_weights=True, patience=5)
 
     model = create_model()
     model.compile(loss='mse', optimizer='adam')
-    model.fit(images, measurements, shuffle=True, validation_split=.2, epochs=12)
+    model.fit(images, measurements, shuffle=True, validation_split=.2, epochs=12, callbacks=[early_stop])
 
     model.save('model.h5')
