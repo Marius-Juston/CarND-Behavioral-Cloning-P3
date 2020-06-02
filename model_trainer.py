@@ -55,8 +55,11 @@ def load_images(driving_log_file):
         measurement = float(line[3])
         measurements.append(measurement)
 
-    return np.array(images), np.array(measurements)
+        # for image, measurement in zip(images, measurements):
+        images.append(cv2.flip(image, 1))
+        measurements.append(-measurement)
 
+    return np.array(images), np.array(measurements)
 
 import matplotlib.pyplot as plt
 
