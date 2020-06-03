@@ -106,7 +106,7 @@ if __name__ == '__main__':
     inputs = np.concatenate((left, images, right))
     outputs = np.concatenate((measurements, measurements, measurements))
 
-    model.fit(inputs, outputs, shuffle=True, validation_split=.2, epochs=3,
+    model.fit(inputs, outputs, shuffle=True, validation_split=.2, epochs=4,
               callbacks=[early_stop, tensorboard_callback], batch_size=64)
 
     model.save(f'model{date_time}.h5')
