@@ -101,7 +101,7 @@ if __name__ == '__main__':
     date_time = datetime.now().strftime("%Y%m%d-%H%M%S")
 
     logdir = "logs/fit/" + date_time
-    tensorboard_callback = TensorBoard(log_dir=logdir)
+    tensorboard_callback = TensorBoard(log_dir=logdir, histogram_freq=1)
 
     inputs = np.concatenate((left, images, right))
     outputs = np.concatenate((measurements, measurements, measurements))
