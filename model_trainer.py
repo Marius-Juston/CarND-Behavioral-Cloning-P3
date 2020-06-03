@@ -52,7 +52,7 @@ def get_image(line, index, array, separator=os.sep, image_directory='data/IMG/')
     array.append(cv2.flip(image, 1))
 
 
-def load_images(driving_log_file):
+def load_images(driving_log_file, image_dir):
     lines = []
 
     with open(driving_log_file) as csv_file:
@@ -68,13 +68,14 @@ def load_images(driving_log_file):
     measurements = []
 
     for line in lines:
-        get_image(line, 0, center)
-        get_image(line, 1, left)
-        get_image(line, 2, right)
+        if float(line[6]) >= 25:
+            get_image(line, 0, center, image_directory=image_dir)
+            get_image(line, 1, left, image_directory=image_dir)
+            get_image(line, 2, right, image_directory=image_dir)
 
-        measurement = float(line[3])
-        measurements.append(measurement)
-        measurements.append(-measurement)
+            measurement = float(line[3])
+            measurements.append(measurement)
+            measurements.append(-measurement)
 
     return np.array(center), np.array(left), np.array(right), np.array(measurements)
 
@@ -88,7 +89,7 @@ if __name__ == '__main__':
         data = np.load(save_images, allow_pickle=True)
         images, measurements, left, right = data['images'], data['measurements'], data['left'], data['right']
     else:
-        images, left, right, measurements = load_images(image_file)
+        images, left, right, measurements = load_images(image_file, 'data/IMG/')
         np.savez(save_images, images=images, measurements=measurements, left=left, right=right)
 
     early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, restore_best_weights=True, patience=5)
