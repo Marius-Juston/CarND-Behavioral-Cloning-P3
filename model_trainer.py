@@ -36,22 +36,6 @@ def create_model():
 
     return model
 
-
-def save_model(model: Model, file_path):
-    model.save(file_path, save_format='h5')
-
-
-def get_image(line, index, array, separator=os.sep, image_directory='data/IMG/'):
-    source_path = line[index]
-    file_name = source_path.split(separator)[-1]
-    path = image_directory + file_name
-    image = cv2.imread(path)
-    if image is None:
-        print(index, line)
-    array.append(image)
-    array.append(cv2.flip(image, 1))
-
-
 def generator(samples, driving_log_file, batch_size=64):
     num_samples = len(samples)
     image_dir = driving_log_file.split('/')[0] + "/IMG/"
