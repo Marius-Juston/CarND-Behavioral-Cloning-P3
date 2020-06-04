@@ -65,6 +65,7 @@ def generator(samples, driving_log_file, batch_size=64):
             for batch_sample in batch_samples:
                 name = image_dir + batch_sample[0].split(os.sep)[-1]
                 center_image = cv2.imread(name)
+                center_image = cv2.cvtColor(center_image, cv2.COLOR_RGB2YUV)
                 center_angle = batch_sample[1]
 
                 if batch_sample[2]:
