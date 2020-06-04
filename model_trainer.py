@@ -8,9 +8,9 @@ import numpy as np
 import sklearn
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping, TensorBoard
-from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, Cropping2D, BatchNormalization
+from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, Cropping2D, BatchNormalization, \
+    Dropout
 from tensorflow.python.keras.models import Model, Sequential
-from tensorflow.python.training.adam import AdamOptimizer
 
 
 def create_model():
