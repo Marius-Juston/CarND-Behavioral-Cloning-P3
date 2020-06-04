@@ -16,7 +16,7 @@ from tensorflow.python.training.adam import AdamOptimizer
 def create_model():
     model = Sequential()
     model.add(Lambda(lambda x: (x / 255.0) - .5, input_shape=(160, 320, 3)))
-    model.add(Cropping2D(cropping=((70, 25), (0, 0))))
+    model.add(Cropping2D(cropping=((60, 25), (0, 0))))
     model.add(Convolution2D(24, 5, 2, activation='relu', kernel_initializer='he_uniform'))
     model.add(BatchNormalization())
     model.add(Convolution2D(36, 5, 2, activation='relu', kernel_initializer='he_uniform'))
