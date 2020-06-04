@@ -121,7 +121,7 @@ if __name__ == '__main__':
     model = create_model()
     model.summary()
 
-    model.compile(loss='mse', optimizer=AdamOptimizer(0.0001))
+    model.compile(loss='mse', optimizer='adam')
 
     date_time = datetime.now().strftime("%Y%m%d-%H%M%S")
 
