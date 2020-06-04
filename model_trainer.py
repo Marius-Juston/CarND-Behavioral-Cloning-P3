@@ -85,7 +85,7 @@ def generator(samples, driving_log_file, batch_size=64):
             yield tuple(sklearn.utils.shuffle(X_train, y_train))
 
 
-def load_images(driving_log_file, batch_size=64, correction=.2):
+def load_images(driving_log_file, batch_size=64, correction=.3):
     lines = []
 
     with open(driving_log_file) as csv_file:
