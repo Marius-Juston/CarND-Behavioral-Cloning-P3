@@ -96,16 +96,17 @@ def load_images(driving_log_file, batch_size=64, correction=.3):
         next(reader, None)
 
         for line in reader:
-            steering_center = float(line[3])
-            steering_right = steering_center - correction
-            steering_left = steering_center + correction
+            if float(line[6]) >= 25:
+                steering_center = float(line[3])
+                steering_right = steering_center - correction
+                steering_left = steering_center + correction
 
-            lines.append((line[0], steering_center, 0))
-            lines.append((line[0], -steering_center, 1))
-            lines.append((line[1], steering_left, 0))
-            lines.append((line[1], -steering_left, 1))
-            lines.append((line[2], steering_right, 0))
-            lines.append((line[2], -steering_right, 1))
+                lines.append((line[0], steering_center, 0))
+                lines.append((line[0], -steering_center, 1))
+                lines.append((line[1], steering_left, 0))
+                lines.append((line[1], -steering_left, 1))
+                lines.append((line[2], steering_right, 0))
+                lines.append((line[2], -steering_right, 1))
 
     train_samples, validation_samples = train_test_split(lines, test_size=0.2)
 
