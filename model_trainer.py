@@ -30,13 +30,16 @@ def create_model():
     model.add(Flatten())
     model.add(Dense(1164, activation='relu', kernel_initializer='he_uniform'))
     model.add(BatchNormalization())
-
+    model.add(Dropout(.5))
     model.add(Dense(100, activation='relu', kernel_initializer='he_uniform'))
     model.add(BatchNormalization())
+    model.add(Dropout(.5))
     model.add(Dense(50, activation='relu', kernel_initializer='he_uniform'))
     model.add(BatchNormalization())
+    model.add(Dropout(.5))
     model.add(Dense(10, activation='relu', kernel_initializer='he_uniform'))
     model.add(BatchNormalization())
+    model.add(Dropout(.5))
     model.add(Dense(1))
 
     return model
