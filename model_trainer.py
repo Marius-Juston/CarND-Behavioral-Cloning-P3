@@ -6,10 +6,10 @@ from math import ceil
 import cv2
 import numpy as np
 import sklearn
+import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping, TensorBoard
-from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, Cropping2D, BatchNormalization, \
-    Dropout
+from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, Cropping2D, Dropout
 from tensorflow.python.keras.models import Model, Sequential
 
 
@@ -112,6 +112,7 @@ def load_images(driving_log_file, batch_size=64, correction=.3):
 
 if __name__ == '__main__':
     image_file = 'data/driving_log.csv'
+    tf.random.set_seed(42)
 
     early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, restore_best_weights=True, patience=5)
 
