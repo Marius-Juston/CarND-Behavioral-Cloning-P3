@@ -1,7 +1,9 @@
 import csv
 import os
+import random
 from datetime import datetime
 from math import ceil
+from random import shuffle
 
 import cv2
 import numpy as np
@@ -10,7 +12,7 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping, TensorBoard
 from tensorflow.python.keras.layers import Flatten, Dense, Lambda, Convolution2D, Cropping2D, Dropout
-from tensorflow.python.keras.models import Model, Sequential
+from tensorflow.python.keras.models import Sequential
 
 
 def create_model():
@@ -36,11 +38,13 @@ def create_model():
 
     return model
 
+
 def generator(samples, driving_log_file, batch_size=64):
     num_samples = len(samples)
     image_dir = driving_log_file.split('/')[0] + "/IMG/"
 
     while 1:  # Loop forever so the generator never terminates
+        shuffle(samples)
         for offset in range(0, num_samples, batch_size):
             batch_samples = samples[offset:offset + batch_size]
 
