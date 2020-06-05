@@ -12,5 +12,6 @@
 *.pyc
 Python/.idea/other.xml
 
-data*
+data*/
 logs
+run*/
