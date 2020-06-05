@@ -18,8 +18,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
+[image1]: ./project_report/download.svg "Model Visualization"
+[image2]: ./data/IMG/center_2020_06_03_15_24_45_821.jpg "Center lane image"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
 [image4]: ./examples/placeholder_small.png "Recovery Image"
 [image5]: ./examples/placeholder_small.png "Recovery Image"
@@ -54,19 +54,19 @@ The model.py file contains the code for training and saving the convolution neur
 
 #### 1. An appropriate model architecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
+My model consists of a convolution neural network (model.py lines 18-36), that uses 3x3 filter sizes and 5x5 with a stride of 2 kernels, with depths between 24-64. And a linear part that ranged from 10-1164.
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
+The model includes RELU layers to introduce nonlinearity, and the data is normalized in the model using a Keras lambda layer (code line 20). EAch of the relu layers have their weights initialized using He uniform algorithm as I read through [here](https://towardsdatascience.com/weight-initialization-in-neural-networks-a-journey-from-the-basics-to-kaiming-954fb9b47c79), that it was the best way to initialize Relu.
 
 #### 2. Attempts to reduce overfitting in the model
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
+The model contains dropout layers in order to reduce overfitting (model.py lines 29-35). 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 92). The validation and training set were distributed as 20% in validation and the rest as training. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 #### 3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
+The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25). I also tried multiple steering angle correction factors from 0.15, 0.2, 0.25, and 0.3, in the end 0.25 seemed to perform the best to bring the car back in track. Another parameter I had to tune was the number of epochs, I tried many epoch and 5 seemed like it was working best. I also used a dropout of 0.5 and that seemed to work well. 
 
 #### 4. Appropriate training data
 
@@ -78,25 +78,52 @@ For details about how I created the training data, see the next section.
 
 #### 1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+The overall strategy for deriving a model architecture was to first start simple and then use the NVIDIA model to train my dataset on.
 
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+My first step was to use a convolution neural network model similar to the one in the lesson I thought this model might be appropriate because it was working well when viewed in the lesson; however, when I tried it the car was not driving correctly or nearly as smoothly as the one shown.
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a very low mean squared error on the validation set. This implied that the model images where too similar from the validation and the training set and maybe also some overfitting. 
 
-To combat the overfitting, I modified the model so that ...
+To combat the overfitting, I modified the model so that it incorporated dropout layers.
 
-Then I ... 
+Then I moved on to use the NVIDIA CNN model to try and get a better model, I also reduced the cropping region in order for the model to see more of what was happening. I also added dropout layers to the linear part of the model. And I added Batch Normalization to try to make the model more stable.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track especially the area after the bridge where there was a dirt spot, the issue was due to the bacth normalizaation that was normalizing the extreme steeering angle required thus causing the car to not turn enough and thus just go straight to improve the driving behavior in these cases, I removed the batch normalization layers
 
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
+At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road. Though it does still swerve a lot in some areas.
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture (model.py lines 19-36) consisted of a convolution neural network with the following layers and layer sizes ...
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+| Layer (type)              | Output Shape           | Param #   |
+|:-------------------------:|:----------------------:|:----------|
+| lambda (Lambda)           | (None, 160, 320, 3)    | 0         |
+| cropping2d (Cropping2D)   | (None, 75, 320, 3)     | 0         |
+| conv2d (Conv2D)           | (None, 36, 158, 24)    | 1824      |
+| conv2d_1 (Conv2D)         | (None, 16, 77, 36)     | 21636     |
+| conv2d_2 (Conv2D)         | (None, 6, 37, 48)      | 43248     |
+| conv2d_3 (Conv2D)         | (None, 4, 35, 64)      | 27712     |
+| conv2d_4 (Conv2D)         | (None, 2, 33, 64)      | 36928     |
+| flatten (Flatten)         | (None, 4224)           | 0         |
+| dense (Dense)             | (None, 1164)           | 4917900   |
+| dropout (Dropout)         | (None, 1164)           | 0         |
+| dense_1 (Dense)           | (None, 100)            | 116500    |
+| dropout_1 (Dropout)       | (None, 100)            | 0         |
+| dense_2 (Dense)           | (None, 50)             | 5050      |
+| dropout_2 (Dropout)       | (None, 50)             | 0         |
+| dense_3 (Dense)           | (None, 10)             | 510       |
+| dropout_3 (Dropout)       | (None, 10)             | 0         |
+| dense_4 (Dense)           | (None, 1)              | 11        |
+
+Total params: 5,171,319
+
+Trainable params: 5,171,319
+
+Non-trainable params: 0
+_________________________________________________________________
+
+Here is a visualization of the architecture:
 
 ![alt text][image1]
 
@@ -106,7 +133,7 @@ To capture good driving behavior, I first recorded two laps on track one using c
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to return back in track These images show what a recovery looks like starting from ... :
 
 ![alt text][image3]
 ![alt text][image4]
@@ -124,6 +151,6 @@ Etc ....
 After the collection process, I had X number of data points. I then preprocessed this data by ...
 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
+I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
