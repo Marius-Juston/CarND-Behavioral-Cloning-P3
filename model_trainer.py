@@ -24,7 +24,6 @@ def create_model():
     model.add(Convolution2D(48, 5, 2, activation='relu', kernel_initializer='he_uniform'))
     model.add(Convolution2D(64, 3, activation='relu', kernel_initializer='he_uniform'))
     model.add(Convolution2D(64, 3, activation='relu', kernel_initializer='he_uniform'))
-    # model.add(BatchNormalization())
     model.add(Flatten())
     model.add(Dense(1164, activation='relu', kernel_initializer='he_uniform'))
     model.add(Dropout(.5))
@@ -99,9 +98,10 @@ def load_images(driving_log_file, batch_size=64, correction=.25):
 
 
 if __name__ == '__main__':
-    image_file = 'data/driving_log.csv'
     tf.random.set_seed(42)
     random.seed(42)
+
+    image_file = 'data/driving_log.csv'
 
     early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, restore_best_weights=True, patience=5)
 
