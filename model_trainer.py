@@ -81,6 +81,7 @@ def load_images(driving_log_file, batch_size=64, correction=.25):
                 steering_right = steering_center - correction
                 steering_left = steering_center + correction
 
+                # 0 means do not flip, 1 means flip camera image
                 lines.append((line[0], steering_center, 0))
                 lines.append((line[0], -steering_center, 1))
                 lines.append((line[1], steering_left, 0))
