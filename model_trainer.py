@@ -62,7 +62,7 @@ def generator(samples, driving_log_file, batch_size=64):
             X_train = np.array(images)
             y_train = np.array(angles)
 
-            yield tuple(sklearn.utils.shuffle(X_train, y_train))
+            yield tuple(sklearn.utils.shuffle(X_train, y_train, random_state=42))
 
 
 def load_images(driving_log_file, batch_size=64, correction=.3):
@@ -97,6 +97,7 @@ def load_images(driving_log_file, batch_size=64, correction=.3):
 if __name__ == '__main__':
     image_file = 'data/driving_log.csv'
     tf.random.set_seed(42)
+    random.seed(42)
 
     early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, restore_best_weights=True, patience=5)
 
