@@ -20,11 +20,11 @@ The goals / steps of this project are the following:
 
 [image1]: ./project_report/download.svg "Model Visualization"
 [image2]: ./data/IMG/center_2020_06_03_15_24_45_821.jpg "Center lane image"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image3]: ./data/IMG/center_2020_06_03_15_25_46_401.jpg "Recovery Image"
+[image4]: ./data/IMG/center_2020_06_03_15_25_46_741.jpg "Recovery Image"
+[image5]: ./data/IMG/center_2020_06_03_15_25_47_110.jpg "Recovery Image"
+[image6]: ./data/IMG/center_2020_06_03_15_25_47_032.jpg "Normal Image"
+[image7]: ./project_report/flipped.png "Flipped Image"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -133,24 +133,24 @@ To capture good driving behavior, I first recorded two laps on track one using c
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to return back in track These images show what a recovery looks like starting from ... :
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to return back in track These images show what a recovery looks like starting from the left:
 
 ![alt text][image3]
 ![alt text][image4]
 ![alt text][image5]
 
-Then I repeated this process on track two in order to get more data points.
+Then I repeated this process on track one but in reverse in order to get more data points.
 
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
+To augment the data sat, I also flipped images and angles thinking that this would balance the right and left steering for the model so that it would not just think to steer to the left, thus generalizing the model more. For example, here is an image that has then been flipped:
 
 ![alt text][image6]
 ![alt text][image7]
 
 Etc ....
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+After the collection process, I had 41736 number of data points. I then preprocessed this data by changing the images from RGB to YUV so that the model could better see the curves and also I removed the dataset points that had speeds of less than 25mph so that it would not could the ones where I was just starting to launch.
 
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 5 as evidenced by the fact that the training and validation loss seemed to converge at about that number and were not really changing. I used an adam optimizer so that manually training the learning rate wasn't necessary.
